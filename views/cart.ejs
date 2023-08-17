@@ -1,0 +1,80 @@
+<%- include("parts/header") %>
+<%- include("parts/navbar") %>
+
+
+
+
+<% if(cartItems.length > 0){ %>
+
+
+    <div class="container text-center mt-5" style="min-width: 100%;">
+        <div class="col col-sm-11 col-lg-9 mx-auto">
+
+          <form method="post" class="mb-3">
+            <input type="submit" value="Delete All" name="deleteAll" formaction="/cart/deleteAll" class="btn btn-danger">
+            <input type="submit" value="Order All" name="orderAll" formaction="/cart/verifyAllOrders/" class="btn btn-success">
+          </form>
+
+          <% if(validationError){ %>
+            <p class="alert alert-danger mt-3"><%= validationError.msg %></p>
+            <% } %>
+          
+            <table class="table table-bordered m-auto">
+                <thead>
+                  <tr>
+                    <th scope="col">no</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% let current = 1 %>
+                  <% for(let item of cartItems){ %>
+                    <tr>
+                        <th scope="row"><%= current %></th>
+                        <td><%= item.name %></td>
+                        <td><%= item.price %> DH</td>
+
+                        <form method="post">
+                        <td><input type="number" name="amount" value="<%= item.amount %>" class="form-control" ></td>
+                        <td><%= (item.price * item.amount) %> DH</td>
+                        <td class="d-flex justify-content-evenly gap-2">
+                                <input type="submit" value="save" name="save" class="btn btn-success" formaction="/cart/save">
+                                <input type="submit" value="delete" name="delete" class="btn btn-danger" formaction="/cart/delete">
+                                <input type="hidden" value="<%= item._id %>" name="cartId" class="btn btn-danger">
+                            </form>
+                            <form action="/cart/verifyOrder/<%= item._id %>" method="post">
+                            <button type="submit"  class="btn btn-success">Order</button>
+                            </form>
+
+                        </td>
+                      </tr>
+                      <% current++ %>
+                    <% } %>
+                </tbody>
+              </table>
+        </div>
+
+    </div>
+    
+
+    <% }else{ %>
+
+
+
+        <div class="container text-center d-flex flex-column justify-content-center" style="height: 80vh;">
+            <p class="alert alert-danger mt-3">You Don't Have Any Products Added In The Cart</p>
+
+            <a href="/" class="font-weight-bold text-decoration-none">See Products</a>
+        </div>
+
+        <% } %>
+
+
+
+
+
+<%- include("parts/footer") %>

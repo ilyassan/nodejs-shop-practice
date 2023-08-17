@@ -1,0 +1,78 @@
+
+<%- include("parts/header") %>
+<%- include("parts/navbar") %>
+
+
+
+<% let directTo = "/" %>
+<% if(category){ %>
+  <% directTo = "/?category="+category %>
+  <% }%>
+
+<div class="container">
+
+  <form action="/" method="GET">
+    <select class="form-select form-select-lg mb-3 mt-3" aria-label=".form-select-lg example"  name="category" data-category-now=<%= category %>>
+      <option value="all">All</option>
+      <option value="devices">Devices</option>
+      <option value="games" >games</option>
+      <option value="books">books</option>
+    </select>
+    <input type="submit" class="btn btn-primary mb-2" value="Filter">
+  </form>
+
+  <% if(validationError){ %>
+    <p class="alert alert-danger"><%= validationError.msg %></p>
+    <% } %>
+  
+
+
+    <% if(products.length == 0){ %>
+
+      <div class="alert alert-danger">
+        there is no products to show
+      </div>
+
+      <% }else{ %>
+        <div class="row">
+      
+          <% for(let product of products){ %>
+          <div class="col col-12 col-md-6 col-lg-4 col-xl-3">
+              <div class="card p-3 m-auto" style="width: 18rem;">
+                  <img src="<%= product.image %>" class="card-img-top" alt="">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <a href="/product/<%= product._id %>" class="text-decoration-none"><%= product.name %></a>
+                      <p class="mt-2">Price: <%= product.price %> DH</p>
+                    </h5>
+                    <form action="/cart" class="text-center" method="POST">
+                      <input type="number" name="amount" class="form-control">
+                      <input type="hidden" name="name" value="<%= product.name %>">
+                      <input type="hidden" name="price" value="<%= product.price %>">
+                      <input type="hidden" name="productId" value="<%= product._id %>">
+                      <input type="hidden" name="redirectTo" value="<%= directTo %>">
+                      <input type="submit" value="Add To Card" class="btn btn-primary m-2">
+                    </form>
+                  </div>
+                </div>
+          </div>
+          <% } %>
+      </div>
+      <% } %>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include("parts/footer") %>

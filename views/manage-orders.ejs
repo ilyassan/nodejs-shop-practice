@@ -1,0 +1,92 @@
+
+<%- include("parts/header") %>
+<%- include("parts/navbar") %>
+
+
+<div class="container text-center">
+
+    <h1 class="my-4 text-dark pb-2">Manage Orders</h1>
+
+    <form method="post" class="mt-4" >
+        <div class="form-group m-4 d-flex justify-content-between gap-sm-4 gap-2">
+         <button type="submit" class="btn btn-primary col col-md-2 col-sm" formmethod="get" formaction="/admin/manage-orders">All</button>
+        <button type="submit" class="btn btn-primary col col-md-2 col-sm" formaction="/admin/manage-orders/pending-orders">Pending</button>
+        <button type="submit" class="btn btn-primary col col-md-2 col-sm" formaction="/admin/manage-orders/sent-orders">Sent</button>
+        <button type="submit" class="btn btn-primary col col-md-2 col-sm" formaction="/admin/manage-orders/completed-orders">Completed</button> 
+        </div> 
+    </form>
+
+    <form action="/admin/manage-orders" method="post">
+        <div class="form-group m-4 d-flex justify-content-between">
+            <input type="text" name="userEmail" placeholder="User Email" class="form-control" style="width: 72.3%;">
+        <input type="submit" value="Search" class="btn btn-primary col col-2">
+        </div>
+    </form>
+
+    <% if(validationErrors){ %>
+
+      <p class="alert alert-danger"><%= validationErrors.msg %></p>
+
+      <% }else if(notFound){ %>
+        
+      <p class="alert alert-danger">Email Not Found</p>
+
+      <% }else{ %>
+        <%if(orderItems.length > 0){ %>
+          <table class="table table-bordered m-auto">
+            <thead>
+              <tr>
+                <th scope="col">Product Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Address</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order time</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% let current = 1 %>
+              <% for(let item of orderItems){ %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.amount %></td>
+                    <td><%= (item.price * item.amount) %> DH</td>
+                    <td><%= item.address %></td>
+                    <td class="text-danger">
+                        <form method="post">
+      
+                        <select class="form-select form-select-sm" name="wStatus" aria-label=".form-select-sm example" data-status="<%= item.status %>">
+                            <option value="Pending" class="text-light bg-danger">Pending</option>
+                            <option value="Sent" class="text-light bg-warning">Sent</option>
+                            <option value="Completed" class="text-light bg-success">Completed</option>
+                          </select></td>
+                    
+                    <td>Before<% if((Date.now() - item.time)/1000/60 > 60){%>
+                        <%= ((Date.now() - item.time)/1000/60/60).toFixed() %> Hour
+                        <% }else if((Date.now() - item.time)/1000/60 <1){ %>
+                            1 Minutes
+                        <% }else{ %>
+                        <%= ((Date.now() - item.time)/1000/60).toFixed() %> Minutes
+                        <% } %>
+                    </td>
+      
+                    <td class="d-flex justify-content-evenly gap-2">
+                            <input type="submit" value="Save" class="btn btn-success" formaction="/admin/manage-orders/save">
+                            <input type="hidden" value="<%= item._id %>" name="orderId" class="btn btn-danger">
+                        </form>
+                    </td>
+      
+                  </tr>
+                  <% current++ %>
+                <% } %>
+            </tbody>
+          </table>
+          <% }else{ %>
+            <p class="alert alert-danger">No <%= status %> Orders To Show</p>
+            <% } %>
+        <% } %>
+  
+</div>
+
+
+<%- include("parts/footer") %>

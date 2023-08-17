@@ -1,0 +1,22 @@
+<%- include("parts/header") %>
+<%- include("parts/navbar") %>
+
+
+
+<div class="container text-center mt-5">
+    <h1 class="mb-3">Address</h1>
+
+    <form action="/orders" method="post">
+        <input type="text" name="address" placeholder="Type Your Address Here" class="form-control m-2">
+        <input type="hidden" value="<%= itemId %>" name="cartId">
+        <input type="hidden" value="<%= item %>" name="cart">
+        <% if(validationError){ %>
+            <p class="alert alert-danger"><%= validationError.msg %></p>
+            <% } %>
+        <input type="submit" value="Confirme Order" class="btn btn-primary mt-2">
+    </form>
+</div>
+
+
+
+<%- include("parts/footer") %>

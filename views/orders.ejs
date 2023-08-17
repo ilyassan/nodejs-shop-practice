@@ -1,0 +1,91 @@
+<%- include("parts/header") %>
+<%- include("parts/navbar") %>
+
+
+
+
+<% if(orderItems.length > 0){ %>
+
+
+    <div class="container text-center mt-5" style="min-width: 100%;">
+        <div class="col col-sm-11 col-lg-9 mx-auto">
+
+          <form action="/orders/cancelAll" method="post" class="mb-3">
+            <input type="submit" value="cancel All" name="cancelAll" class="btn btn-danger">
+          </form>
+
+          
+            <table class="table table-bordered m-auto">
+                <thead>
+                  <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Order time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% let current = 1 %>
+                  <% for(let item of orderItems){ %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.amount %></td>
+                        <td><%= (item.price * item.amount) %> DH</td>
+                        <td><%= item.address %></td>
+                        <% if(item.status == "Pending"){ %>
+                          <td style="font-weight: bold;" class="text-danger font-weight-bold"><%= item.status %>...</td>
+                          <% }else if(item.status == "Sent"){ %>
+                            <td style="font-weight: bold;" class="text-warning font-weight-bold"><%= item.status %>...</td>
+                            <% }else{ %>
+                              <td style="font-weight: bold;" class="text-success font-weight-bold"><%= item.status %></td>
+                              <% } %>
+                        
+                        <td>Before<% if((Date.now() - item.time)/1000/60 > 60){%>
+                            <%= ((Date.now() - item.time)/1000/60/60).toFixed() %> Hour
+                            <% }else if((Date.now() - item.time)/1000/60 <1){ %>
+                                1 Minutes
+                            <% }else{ %>
+                            <%= ((Date.now() - item.time)/1000/60).toFixed() %> Minutes
+                            <% } %>
+                        </td>
+
+                        <td class="d-flex justify-content-evenly gap-2">
+                        <% if(item.status == "Pending"){ %>
+                              <form method="post">
+                                <input type="submit" value="Cancel" name="cancel" class="btn btn-danger" formaction="/orders/cancel">
+                                <input type="hidden" value="<%= item._id %>" name="orderId" class="btn btn-danger">
+                            </form>
+                            <% }else{ %>
+                                <input type="submit" value="Cancel" name="cancel" class="btn btn-danger" disabled>
+                              <% } %>
+                          </td>
+
+                      </tr>
+                      <% current++ %>
+                    <% } %>
+                </tbody>
+              </table>
+        </div>
+
+    </div>
+    
+
+    <% }else{ %>
+
+
+
+        <div class="container text-center d-flex flex-column justify-content-center" style="height: 80vh;">
+            <p class="alert alert-danger mt-3">You Don't Have Any Orders</p>
+
+            <a href="/" class="font-weight-bold text-decoration-none">See Products</a>
+        </div>
+
+        <% } %>
+
+
+
+
+
+<%- include("parts/footer") %>
