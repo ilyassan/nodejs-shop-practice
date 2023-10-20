@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname,"images")))
 app.use(flash())
 
 const STORE = new SessionStore({
-    uri: "mongodb+srv://user:G5aQ6Pm7Huroju2d@cluster0.ivzfw4x.mongodb.net/online-shop?retryWrites=true&w=majority",
+    uri: "mongodb://localhost:27017",
     collection: "sessions"
 })
 

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const DB_URL = "mongodb+srv://user:G5aQ6Pm7Huroju2d@cluster0.ivzfw4x.mongodb.net/online-shop?retryWrites=true&w=majority"
+const DB_URL = "mongodb://localhost:27017"
 
 const orderSchema = {
     name: String,
